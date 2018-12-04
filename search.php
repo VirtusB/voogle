@@ -1,3 +1,7 @@
+<?php
+require_once 'helpers.php';
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -22,12 +26,25 @@
             <div class="search-container">
                 <form action="search.php" method="GET">
                     <div class="search-bar-container">
-                        <input type="text" class="search-box" name="term">
-                        <button>Search</button>
+                        <input autocomplete="off" type="text" class="search-box" name="term">
+                        <button class="search-button">
+                            <img src="assets/images/glass.png" alt="Search">
+                        </button>
                     </div>
                 </form>
             </div>
 
+        </div>
+
+        <div class="tabs-container">
+            <ul class="tab-list">
+                <li class="<?= isActiveType('sites') ?>">
+                    <a href="<?= 'search.php?type=sites&term=' . getSearchTerm(); ?>">Sites</a>
+                </li>
+                <li class="<?= isActiveType('images') ?>">
+                    <a href="<?= 'search.php?type=images&term=' . getSearchTerm(); ?>">Images</a>
+                </li>
+            </ul>
         </div>
     </div>
 </div>

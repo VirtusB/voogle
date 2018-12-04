@@ -95,3 +95,66 @@ html, body {
 .header-content .search-container form {
     margin: 15px 0 28px 0;
 }
+
+.header-content .search-bar-container {
+    height: 44px;
+    border-radius: 2px;
+    background: #fff;
+    box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.16), 0 0 0 1px rgba(0, 0, 0, 0.08);
+    width: 70%;
+    max-width: 630px;
+    box-sizing: border-box;
+    display: flex;
+}
+
+.header-content .search-bar-container .search-box {
+    flex: 1;
+    border: none;
+    background: transparent;
+    padding: 12px;
+    font-size: 16px;
+    color: #000;
+}
+
+.header-content .search-bar-container .search-button {
+    background: #fff;
+    height: 44px;
+    margin-top: 0;
+    width: 44px;
+    padding-right: 20px;
+    display: flex;
+    justify-content: center;
+}
+
+.header-content .search-bar-container .search-button img {
+    width: 22px;
+}
+
+.tabs-container {
+    margin-left: 150px;
+}
+
+.tabs-container .tab-list {
+    padding: 0;
+    margin: 0;
+}
+
+.tabs-container .tab-list li {
+    display: inline-block;
+    padding: 0 16px 12px 16px;
+    color: #777;
+    font-size: 13px;
+}
+
+.tabs-container .tab-list li a {
+    text-decoration: none;
+}
+
+.tabs-container .tab-list li.active {
+    border-bottom: 3px solid #1A73E8;
+}
+
+.tabs-container .tab-list li.active a {
+    font-weight: bold;
+    color: #1A73E8;
+}

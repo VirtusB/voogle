@@ -86,8 +86,12 @@ $resultsProvider = new SiteResultsProvider($conn);
                 $currentPage = 1;
             }
 
-            while (intval($pagesLeft) !== 0) {
-                if ($currentPage === getPageNumber()) {
+            if ($currentPage + $pagesLeft > $numPages + 1) {
+                $currentPage = $numPages + 1 - $pagesLeft;
+            }
+
+            while (intval($pagesLeft) !== 0 && $currentPage <= $numPages) {
+                if (intval($currentPage) === getPageNumber()) {
                     echo "<div class='page-number-container'>
                         <img src='assets/images/pageSelected.png'>
                         <span class='page-number'>$currentPage</span>
@@ -114,5 +118,6 @@ $resultsProvider = new SiteResultsProvider($conn);
     </div>
 
 </div>
+<script src="assets/js/main.js"></script>
 </body>
 </html>

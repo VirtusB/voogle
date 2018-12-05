@@ -234,4 +234,6 @@ html, body {
 
 a .page-number {
     color: #4285f4;
+    margin-left: 2px;
+    margin-right: 2px;
 }

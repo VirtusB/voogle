@@ -27,4 +27,25 @@ class DomDocumentParser {
     public function getLinks(): \DOMNodeList {
         return $this->_doc->getElementsByTagName('a');
     }
+
+    /**
+     * @return DOMNodeList
+     */
+    public function getTitleTags(): \DOMNodeList {
+        return $this->_doc->getElementsByTagName('title');
+    }
+
+    /**
+     * @return DOMNodeList
+     */
+    public function getMetaTags(): \DOMNodeList {
+        return $this->_doc->getElementsByTagName('meta');
+    }
+
+    /**
+     * @return DOMNodeList
+     */
+    public function getImages(): \DOMNodeList {
+        return $this->_doc->getElementsByTagName('img');
+    }
 }

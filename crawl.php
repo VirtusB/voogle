@@ -1,5 +1,33 @@
 <?php
+require_once 'config.php';
 require_once 'classes/DomDocumentParser.php';
+
+$alreadyCrawled = [];
+$crawling = [];
+$alreadyFoundImages = [];
+
+function insertLink($url, $title, $description, $keywords) {
+    global $conn;
+
+    $query = $conn->prepare("INSERT INTO sites(url, title, description, keywords) VALUES(:url, :title, :description, :keywords)");
+    $query->bindParam(':url', $url);
+    $query->bindParam(':title', $title);
+    $query->bindParam(':description', $description);
+    $query->bindParam(':keywords', $keywords);
+
+    return $query->execute();
+}
+
+function linkExists($url) {
+    global $conn;
+
+    $query = $conn->prepare("SELECT * FROM sites WHERE url = :url");
+    $query->bindParam(':url', $url);
+    $query->execute();
+
+    return $query->rowCount() < 0;
+
+}
 
 function createLink($src, $url) {
     $scheme = parse_url($url)['scheme'];
@@ -21,7 +49,61 @@ function createLink($src, $url) {
     return $src;
 }
 
+function getDetailsForPage(string $url, DomDocumentParser $parser) {
+    global $alreadyFoundImages;
+
+    $titleArray = $parser->getTitleTags();
+    if (count($titleArray) === 0) {
+        return;
+    }
+
+    $title = $titleArray->item(0)->nodeValue;
+    $title = str_replace("\n", '', $title);
+
+    if ($title === '') {
+        return;
+    }
+
+    $description = '';
+    $keywords = '';
+    $metasArray = $parser->getMetaTags();
+    foreach ($metasArray as $meta) {
+        if ($meta->getAttribute('name') === 'description') {
+            $description = str_replace("\n", '', $meta->getAttribute('content'));
+        }
+
+        if ($meta->getAttribute('name') === 'keywords') {
+            $keywords = str_replace("\n", '', $meta->getAttribute('content'));
+        }
+    }
+
+    if (!linkExists($url)) {
+        insertLink($url, $title, $description, $keywords);
+    }
+
+    $imageArray = $parser->getImages();
+    foreach ($imageArray as $image) {
+        $src = $image->getAttribute('src');
+        $alt = $image->getAttribute('alt');
+        $title = $image->getAttribute('title');
+
+        if (!$title && !$alt) {
+            return;
+        }
+
+        $src = createLink($src, $url);
+        $hash = array_flip($alreadyFoundImages);
+        if (!isset($hash[$src])) {
+            $alreadyFoundImages[] = $src;
+            
+        }
+    }
+}
+
 function followLinks(string $url) {
+    global $alreadyCrawled;
+    global $crawling;
+
     $parser = new DomDocumentParser($url);
 
     $linkList = $parser->getLinks();
@@ -38,9 +120,23 @@ function followLinks(string $url) {
         }
 
         $href = createLink($href, $url);
-        echo $href, '<br>';
+
+        $hash = array_flip($alreadyCrawled);
+        if (!isset($hash[$href])) {
+            $alreadyCrawled[] = $href;
+            $crawling[] = $href;
+
+            getDetailsForPage($href, $parser);
+        }
+    }
+
+    array_shift($crawling);
+
+    foreach ($crawling as $site) {
+        followLinks($site);
     }
 }
 
 $startUrl = 'https://www.bbc.com';
 followLinks($startUrl);
+

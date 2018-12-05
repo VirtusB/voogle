@@ -2,12 +2,10 @@
 require_once 'config.php';
 require_once 'helpers.php';
 require_once 'classes/SiteResultsProvider.php';
-
+require_once 'classes/ImageResultsProvider.php';
 
 setupSearchType();
 setupPageNumber();
-
-$resultsProvider = new SiteResultsProvider($conn);
 ?>
 
 <!DOCTYPE html>
@@ -34,6 +32,7 @@ $resultsProvider = new SiteResultsProvider($conn);
             <div class="search-container">
                 <form action="search.php" method="GET">
                     <div class="search-bar-container">
+                        <input type="hidden" name="type" value="<?= getSearchType() ?>">
                         <input value="<?= getSearchTerm() ?>" autocomplete="off" type="text" class="search-box" name="term">
                         <button class="search-button">
                             <img src="assets/images/glass.png" alt="Search">
@@ -58,7 +57,20 @@ $resultsProvider = new SiteResultsProvider($conn);
     </div>
 
     <div class="main-results-section">
-        <p class="results-count"><?= $resultsProvider->getNumResults(getSearchTerm()); ?> results found</p>
+        <?php
+            if (getSearchType() === 'images') {
+                $resultsProvider = new ImageResultsProvider($conn);
+                define('PAGE_SIZE', 30);
+            } else {
+                $resultsProvider = new SiteResultsProvider($conn);
+                define('PAGE_SIZE', 20);
+            }
+
+            $numResults = $resultsProvider->getNumResults(getSearchTerm());
+        ?>
+        <p class="results-count">
+            <?= $numResults ?> results found
+        </p>
 
         <?= $resultsProvider->getResultsHTML(getPageNumber(), PAGE_SIZE, getSearchTerm()) ?>
     </div>
@@ -69,13 +81,12 @@ $resultsProvider = new SiteResultsProvider($conn);
                 <img src="assets/images/pageStart.png">
             </div>
             <?php
-            $countPages = $resultsProvider->getNumResults(getSearchTerm());
 
             $term = getSearchTerm();
             $type = getSearchType();
 
             $pagesToShow = 10;
-            $numPages = ceil($countPages / PAGE_SIZE);
+            $numPages = ceil($numResults / PAGE_SIZE);
 
             $pagesLeft = min($pagesToShow, $numPages);
 
@@ -118,6 +129,7 @@ $resultsProvider = new SiteResultsProvider($conn);
     </div>
 
 </div>
+<script src="assets/js/masonry.js"></script>
 <script src="assets/js/main.js"></script>
 </body>
 </html>

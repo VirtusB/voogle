@@ -9,7 +9,7 @@ mb_http_output('UTF-8');
 header('Content-Type: text/html; charset=UTF-8');
 ini_set('mssql.charset', 'UTF-8');
 
-define('PAGE_SIZE', 20);
+
 
 ob_start();
 

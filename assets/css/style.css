@@ -237,3 +237,36 @@ a .page-number {
     margin-left: 2px;
     margin-right: 2px;
 }
+
+.main-results-section .image-results {
+    margin: 20px;
+}
+
+.grid-item img {
+    max-width: 200px;
+    min-width: 50px;
+    visibility: hidden;
+}
+
+.grid-item {
+    position: relative;
+}
+
+.grid-item .details {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    overflow: hidden;
+    background: rgba(0, 0, 0, 0.8);
+    color: #fff;
+    font-size: 11px;
+    padding: 3px;
+    box-sizing: border-box;
+    white-space: nowrap;
+    visibility: hidden;
+}
+
+.grid-item:hover .details {
+    visibility: visible;
+}

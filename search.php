@@ -3,6 +3,10 @@ require_once 'config.php';
 require_once 'helpers.php';
 require_once 'classes/SiteResultsProvider.php';
 
+
+setupSearchType();
+setupPageNumber();
+
 $resultsProvider = new SiteResultsProvider($conn);
 ?>
 
@@ -30,7 +34,7 @@ $resultsProvider = new SiteResultsProvider($conn);
             <div class="search-container">
                 <form action="search.php" method="GET">
                     <div class="search-bar-container">
-                        <input autocomplete="off" type="text" class="search-box" name="term">
+                        <input value="<?= getSearchTerm() ?>" autocomplete="off" type="text" class="search-box" name="term">
                         <button class="search-button">
                             <img src="assets/images/glass.png" alt="Search">
                         </button>
@@ -54,9 +58,59 @@ $resultsProvider = new SiteResultsProvider($conn);
     </div>
 
     <div class="main-results-section">
-        <p class="results-count"><?= $resultsProvider->getNumResults(getSearchTerm()) ?> results found</p>
+        <p class="results-count"><?= $resultsProvider->getNumResults(getSearchTerm()); ?> results found</p>
 
-        <?= $resultsProvider->getResultsHTML(1, 20, getSearchTerm()) ?>
+        <?= $resultsProvider->getResultsHTML(getPageNumber(), PAGE_SIZE, getSearchTerm()) ?>
+    </div>
+
+    <div class="pagination-container">
+        <div class="page-buttons">
+            <div class="page-number-container">
+                <img src="assets/images/pageStart.png">
+            </div>
+            <?php
+            $countPages = $resultsProvider->getNumResults(getSearchTerm());
+
+            $term = getSearchTerm();
+            $type = getSearchType();
+
+            $pagesToShow = 10;
+            $numPages = ceil($countPages / PAGE_SIZE);
+
+            $pagesLeft = min($pagesToShow, $numPages);
+
+            $currentPage = getPageNumber() - floor($pagesToShow / 2);
+
+
+            if ($currentPage < 1) {
+                $currentPage = 1;
+            }
+
+            while (intval($pagesLeft) !== 0) {
+                if ($currentPage === getPageNumber()) {
+                    echo "<div class='page-number-container'>
+                        <img src='assets/images/pageSelected.png'>
+                        <span class='page-number'>$currentPage</span>
+                      </div>";
+                } else {
+                    echo "<div class='page-number-container'>
+                            <a href='search.php?term=$term&type=$type&page=$currentPage'>
+                                <img src='assets/images/page.png'>
+                                <span class='page-number'>$currentPage</span>
+                            </a>
+                          </div>";
+                }
+
+                $currentPage++;
+                $pagesLeft--;
+            }
+
+
+            ?>
+            <div class="page-number-container">
+                <img src="assets/images/pageEnd.png">
+            </div>
+        </div>
     </div>
 
 </div>

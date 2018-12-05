@@ -29,14 +29,19 @@ class SiteResultsProvider {
         return $query->fetch(PDO::FETCH_ASSOC)['total'];
     }
 
-    public function getResultsHTML($page_num, $page_size, $term) {
+    public function getResultsHTML(int $page_num, int $page_size, string $term) {
+        $fromLimit = ($page_num - 1) * $page_size;
+        $page_size = intval($page_size);
+
         $stmt = 'SELECT * 
                 FROM sites 
                 WHERE title LIKE :term 
                 OR url LIKE :term2
                 OR keywords LIKE :term3
                 OR description LIKE :term4
-                ORDER BY clicks DESC';
+                ORDER BY clicks DESC
+                OFFSET :from_limit ROWS
+                FETCH NEXT :page_size ROWS ONLY';
 
         $query = $this->_conn->prepare($stmt);
 
@@ -45,6 +50,9 @@ class SiteResultsProvider {
         $query->bindParam(':term2', $searchTerm);
         $query->bindParam(':term3', $searchTerm);
         $query->bindParam(':term4', $searchTerm);
+        $query->bindParam(':from_limit', $fromLimit,PDO::PARAM_INT);
+        $query->bindParam(':page_size', $page_size, PDO::PARAM_INT);
+
 
         $query->execute();
 
@@ -53,8 +61,8 @@ class SiteResultsProvider {
         while ($row = $query->fetch(PDO::FETCH_ASSOC)) {
             $id = $row['id'];
             $url = $row['url'];
-            $title = $row['title'];
-            $description = $row['description'];
+            $title = $this->trimField($row['title'], 65);
+            $description = $this->trimField($row['description'], 65);
 
             $resultsHTML .= "<div class='result-container'>
                                 <h3 class='title'>
@@ -68,5 +76,10 @@ class SiteResultsProvider {
         $resultsHTML .= '</div>';
 
         return $resultsHTML;
+    }
+
+    private function trimField($string, $characterLimit) {
+        $dots = strlen($string) > $characterLimit ? '...' : '';
+        return substr($string, 0, $characterLimit) . $dots;
     }
 }

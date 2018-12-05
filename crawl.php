@@ -75,7 +75,7 @@ function getDetailsForPage(string $url, DomDocumentParser $parser) {
     global $alreadyFoundImages;
 
     $titleArray = $parser->getTitleTags();
-    if (count($titleArray) === 0) {
+    if (!is_object($titleArray) || count($titleArray) === 0) {
         return;
     }
 

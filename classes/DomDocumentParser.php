@@ -8,10 +8,13 @@ class DomDocumentParser {
      * @param string $url
      */
     public function __construct(string $url) {
+        $header= "User-Agent: voogleBot/1.0\r\n";
+        $header.= "Accept-Language: en-GB,en;q=0.5\r\n";
+
         $options = array(
             'http' => array(
                 'method' => 'GET',
-                'header' => "User-Agent: voogleBot/0.1\n"
+                'header' => $header
             )
         );
 

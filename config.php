@@ -1,4 +1,9 @@
 <?php
+ini_set('max_execution_time', 0);
+mb_internal_encoding('UTF-8');
+mb_http_output('UTF-8');
+header('Content-Type: text/html; charset=UTF-8');
+ini_set('mssql.charset', 'UTF-8');
 
 ob_start();
 
@@ -15,6 +20,8 @@ try {
             PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
         )
     );
+
+//    $conn->setAttribute(PDO::SQLSRV_ATTR_ENCODING, PDO::SQLSRV_ENCODING_SYSTEM);
 }
 catch(PDOException $e) {
     die('Error connecting to SQL Server: ' . $e->getMessage());

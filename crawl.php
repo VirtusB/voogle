@@ -12,8 +12,21 @@ function insertLink($url, $title, $description, $keywords) {
     $query = $conn->prepare("INSERT INTO sites(url, title, description, keywords) VALUES(:url, :title, :description, :keywords)");
     $query->bindParam(':url', $url);
     $query->bindParam(':title', $title);
+    $description = utf8_encode($description);
     $query->bindParam(':description', $description);
     $query->bindParam(':keywords', $keywords);
+
+    return $query->execute();
+}
+
+function insertImage($url, $src, $alt, $title) {
+    global $conn;
+
+    $query = $conn->prepare("INSERT INTO images(site_url, image_url, alt, title) VALUES(:site_url, :image_url, :alt, :title)");
+    $query->bindParam(':site_url', $url);
+    $query->bindParam(':image_url', $src);
+    $query->bindParam(':alt', $alt);
+    $query->bindParam(':title', $title);
 
     return $query->execute();
 }
@@ -26,7 +39,16 @@ function linkExists($url) {
     $query->execute();
 
     return $query->rowCount() < 0;
+}
 
+function imageExists($src) {
+    global $conn;
+
+    $query = $conn->prepare("SELECT * FROM images WHERE image_url = :image_url");
+    $query->bindParam(':image_url', $src);
+    $query->execute();
+
+    return $query->rowCount() < 0;
 }
 
 function createLink($src, $url) {
@@ -95,7 +117,9 @@ function getDetailsForPage(string $url, DomDocumentParser $parser) {
         $hash = array_flip($alreadyFoundImages);
         if (!isset($hash[$src])) {
             $alreadyFoundImages[] = $src;
-            
+            if (!imageExists($src)) {
+                insertImage($url, $src, $alt, $title);
+            }
         }
     }
 }
@@ -137,6 +161,18 @@ function followLinks(string $url) {
     }
 }
 
-$startUrl = 'https://www.bbc.com';
-followLinks($startUrl);
+$startUrls = json_decode(file_get_contents('sites.json'));
+
+//for ($i = 0; $i < 5; $i++) {
+//    followLinks($startUrls[$i]);
+//}
+$current = 0;
+foreach ($startUrls as $url) {
+    $current++;
+    followLinks($url);
+    echo "Crawler $current<br>";
+}
+
+
+
 

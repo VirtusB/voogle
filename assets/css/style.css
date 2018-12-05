@@ -114,6 +114,7 @@ html, body {
     padding: 12px;
     font-size: 16px;
     color: #000;
+    outline: none;
 }
 
 .header-content .search-bar-container .search-button {
@@ -157,4 +158,49 @@ html, body {
 .tabs-container .tab-list li.active a {
     font-weight: bold;
     color: #1A73E8;
+}
+
+.main-results-section {
+    flex: 1;
+}
+
+.main-results-section .results-count {
+    font-size: 13px;
+    color: #808080;
+    margin-left: 150px;
+}
+
+.main-results-section .site-results {
+    margin-left: 150px;
+}
+
+.result-container {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 26px;
+}
+
+.result-container .title {
+    margin: 0;
+}
+
+.result-container .title a {
+    color: #1a0dab;
+    text-decoration: none;
+    font-weight: normal;
+    font-size: 18px;
+}
+
+.result-container .title a:hover {
+    text-decoration: underline;
+}
+
+.result-container .url {
+    color: #006621;
+    font-size: 14px;
+}
+
+.result-container .description {
+    font-size: 12px;
+    margin-top: 6px;
 }

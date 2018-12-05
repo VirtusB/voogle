@@ -1,5 +1,6 @@
 <?php
 ini_set('max_execution_time', 0);
+ini_set('memory_limit', '14G');
 mb_internal_encoding('UTF-8');
 mb_http_output('UTF-8');
 header('Content-Type: text/html; charset=UTF-8');

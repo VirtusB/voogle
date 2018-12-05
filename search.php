@@ -1,5 +1,9 @@
 <?php
+require_once 'config.php';
 require_once 'helpers.php';
+require_once 'classes/SiteResultsProvider.php';
+
+$resultsProvider = new SiteResultsProvider($conn);
 ?>
 
 <!DOCTYPE html>
@@ -39,14 +43,22 @@ require_once 'helpers.php';
         <div class="tabs-container">
             <ul class="tab-list">
                 <li class="<?= isActiveType('sites') ?>">
-                    <a href="<?= 'search.php?type=sites&term=' . getSearchTerm(); ?>">Sites</a>
+                    <a href="<?= 'search.php?type=sites&term=' . getSearchTerm() ?>">Sites</a>
                 </li>
                 <li class="<?= isActiveType('images') ?>">
-                    <a href="<?= 'search.php?type=images&term=' . getSearchTerm(); ?>">Images</a>
+                    <a href="<?= 'search.php?type=images&term=' . getSearchTerm() ?>">Images</a>
                 </li>
             </ul>
         </div>
+
     </div>
+
+    <div class="main-results-section">
+        <p class="results-count"><?= $resultsProvider->getNumResults(getSearchTerm()) ?> results found</p>
+
+        <?= $resultsProvider->getResultsHTML(1, 20, getSearchTerm()) ?>
+    </div>
+
 </div>
 </body>
 </html>

@@ -17,6 +17,8 @@ setupPageNumber();
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Voogle - Google Clone</title>
     <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="assets/fonts/lg.woff">
+    <link rel="stylesheet" href="assets/css/lightgallery.min.css">
 </head>
 <body>
 <div class="wrapper">
@@ -130,6 +132,7 @@ setupPageNumber();
 
 </div>
 <script src="assets/js/masonry.js"></script>
+<script src="assets/js/lightgallery.min.js"></script>
 <script src="assets/js/main.js"></script>
 </body>
 </html>

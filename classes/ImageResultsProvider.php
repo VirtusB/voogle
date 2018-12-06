@@ -70,14 +70,19 @@ class ImageResultsProvider {
                 $displayText = $imageUrl;
             }
 
-            $resultsHTML .= "<div data-image-id='$id' class='grid-item'>
-                                <a href='$imageUrl'>
+            $resultsHTML .= "<div data-image-id='$id' class='grid-item lightgallery'>
+                                <a data-sub-html='#caption-$id' href='$imageUrl'>
                                 <script>
                                     document.addEventListener('DOMContentLoaded', function() {
                                         loadImage(\"$imageUrl\", \"$id\");
                                     });
                                 </script>
                                 <span class='details'>$displayText</span>
+                                
+                                <div id='caption-$id' style='display:none'>
+                                    <a style='margin-right: 5px;' target='_blank' href='$imageUrl'>View image</a>
+                                    <a style='margin-left: 5px;' target='_blank' href='$siteUrl'>Visit page</a>
+                                </div>
                                 </a>
                             </div>";
         }

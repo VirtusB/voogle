@@ -27,6 +27,12 @@ document.addEventListener('DOMContentLoaded', function() {
             img.style.visibility = 'visible';
         });
     });
+
+    Array.from(document.getElementsByClassName('lightgallery')).forEach(function (gl) {
+        lightGallery(gl);
+    });
+
+
 });
 
 function loadImage(url, id) {

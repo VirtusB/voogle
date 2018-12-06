@@ -8,7 +8,7 @@ document.addEventListener('DOMContentLoaded', function() {
             let url = link.getAttribute('href');
             let id = link.getAttribute('data-link-id');
 
-            increaseLinkClicks(id, url);
+            increaseLinkClicks('site', id, url);
         });
     });
 
@@ -30,6 +30,11 @@ document.addEventListener('DOMContentLoaded', function() {
 
     Array.from(document.getElementsByClassName('lightgallery')).forEach(function (gl) {
         lightGallery(gl);
+        let id = gl.getAttribute('data-image-id');
+
+        gl.addEventListener('onAfterOpen', function(e){
+            increaseLinkClicks('image', id);
+        }, false);
     });
 
 
@@ -58,10 +63,10 @@ function loadImage(url, id) {
     image.src = url;
 }
 
-function increaseLinkClicks(linkId, url) {
-    let data = {linkToUpdate: linkId};
+function increaseLinkClicks(type, id, url) {
+    let data = {idToUpdate: id, typeToUpdate: type};
 
-    fetch("ajax/updateLinkCount.php", {
+    fetch("ajax/updateClicksCount.php", {
         method: "POST",
         mode: "same-origin",
         credentials: "same-origin",
@@ -72,7 +77,9 @@ function increaseLinkClicks(linkId, url) {
             "payload": data
         })
     }).then((response) => {
-        location.href = url;
+        if (type === 'site') {
+            location.href = url;
+        }
     });
 }
 
